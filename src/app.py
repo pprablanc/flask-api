@@ -19,8 +19,9 @@ from flask_apispec import marshal_with, doc, use_kwargs
 from marshmallow import Schema, fields
 
 # endpoints classes
+# TODO: maybe a better way to add modules from package
 # from src.endpoints.yield_endpoint import *
-from src.endpoints.yield_endpoint import *
+from src.endpoints import yield_endpoint
 
 
 
@@ -28,7 +29,7 @@ app = Flask(__name__)  # Flask app instance initiated
 api = Api(app)  # Flask restful wraps Flask app around it.
 app.config.update({
     'APISPEC_SPEC': APISpec(
-        title='Awesome Project',
+        title='Worldwide cereal yield Database',
         version='v1',
         plugins=[MarshmallowPlugin()],
         openapi_version='2.0.0'
@@ -38,8 +39,10 @@ app.config.update({
 })
 docs = FlaskApiSpec(app)
 
-api.add_resource(YieldAPI, '/yield')
-docs.register(YieldAPI)
+api.add_resource(yield_endpoint.YieldAPI, '/yield/<int:id>')
+api.add_resource(yield_endpoint.YieldMeanTypeAPI, '/yield/mean/type/<string:typeId>')
+docs.register(yield_endpoint.YieldAPI)
+docs.register(yield_endpoint.YieldMeanTypeAPI)
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=5000, debug=True)

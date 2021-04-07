@@ -4,30 +4,47 @@ from marshmallow import Schema, fields
 from flask_apispec.views import MethodResource
 from flask_apispec import marshal_with, doc, use_kwargs
 
-
-class YieldResponseSchema(Schema):
-    message = fields.Str(default='Success')
-
-
-class YieldRequestSchema(Schema):
-    api_type = fields.String(required=True, description="API type of awesome API")
+from src.functions import load_data
+# load data
+df = load_data()
 
 
-#  Restful way of creating APIs through Flask Restful
+class YieldSchema(Schema):
+    id = fields.Integer()
+    type = fields.Str()
+    time = fields.Integer()
+    yield_mean = fields.Float()
+    yield_map = fields.List(fields.List(fields.Float()))
+
+class YieldMeanSchema(Schema):
+    id = fields.Integer()
+    time = fields.Integer()
+    type = fields.Str()
+    yield_mean = fields.Float()
+
+class YieldMeanListSchema(Schema):
+    yields = fields.List(fields.Nested(YieldMeanSchema))
+
+
+# Restful way of creating APIs through Flask Restful
 class YieldAPI(MethodResource, Resource):
-    @doc(description='My First GET Awesome API.', tags=['Awesome'])
-    @marshal_with(YieldResponseSchema)  # marshalling
-    def get(self):
+    @doc(description='GET yield API.', tags=['yield'])
+    @marshal_with(YieldSchema)  # marshalling
+    def get(self, id):
         '''
-        Get method represents a GET API method
+        Get method to get all data.
         '''
-        return {'message': 'My First Awesome API'}
+        # res = [{'id': row['id'], 'time': row['time'], 'type': row['cereal'], 'yield_mean': row['yield_mean'], 'yield_map': [[float(row_map) for row_map in col_map] for col_map in row['yield_map'].data]} for index, row in df.iterrows()]
+        res = df.iloc[id][['id', 'type', 'time', 'yield_map']]
+        res['yield_map'] = res['yield_map'].data
+        return res
 
-    @doc(description='My First POST Awesome API.', tags=['Awesome'])
-    @use_kwargs(YieldRequestSchema, location=('json'))
-    @marshal_with(YieldResponseSchema)  # marshalling
-    def post(self):
+class YieldMeanTypeAPI(MethodResource, Resource):
+    @doc(description='GET mean yield for a given type of cereal API.', tags=['yield/mean/type/<id>'])
+    @marshal_with(YieldMeanListSchema)  # marshalling
+    def get(self, typeId):
         '''
-        Post method represents a get API method
+        Get method to get all data.
         '''
-        return {'message': 'My First Awesome API'}
+        tmp = df.groupby(['type']).get_group(typeId)[['id', 'time', 'type', 'yield_mean']]
+        return {'yields': [tmp.iloc[i] for i in range(len(tmp))]}
