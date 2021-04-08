@@ -49,10 +49,9 @@ docs.register(yield_endpoint.YieldAPI)
 docs.register(yield_endpoint.YieldMeanTypeAPI)
 docs.register(yield_endpoint.DashboardAPI)
 
-
 # @app.route("/dashboard/")
 # def dashboard():
 #     return render_template("dashboard.html", template_folder='src/template')
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5000, debug=True)
+   app.run(host='0.0.0.0', port=5000, debug=True)

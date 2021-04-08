@@ -1,6 +1,6 @@
-FROM python:3.9.2
+FROM tiangolo/uwsgi-nginx:python3.8
 
-RUN pip3 install pipenv
+RUN pip3.8 install pipenv
 
 ENV PROJECT_DIR /usr/src/flaskyieldapi
 
@@ -14,5 +14,4 @@ RUN pipenv install --deploy --ignore-pipfile
 
 EXPOSE 5000
 
-# CMD ["./run_app_prod.sh"]
 CMD ["pipenv", "run", "python", "wsgi.py"]
