@@ -39,10 +39,20 @@ app.config.update({
 })
 docs = FlaskApiSpec(app)
 
+# TODO: modify hierarchy. /yield/mean/type should be rather: /type/<string:typeId>/yields/mean
 api.add_resource(yield_endpoint.YieldAPI, '/yield/<int:id>')
 api.add_resource(yield_endpoint.YieldMeanTypeAPI, '/yield/mean/type/<string:typeId>')
+api.add_resource(yield_endpoint.TypeCerealAPI, '/types/')
+api.add_resource(yield_endpoint.DashboardAPI, '/dashboard/')
+
 docs.register(yield_endpoint.YieldAPI)
 docs.register(yield_endpoint.YieldMeanTypeAPI)
+docs.register(yield_endpoint.DashboardAPI)
+
+
+# @app.route("/dashboard/")
+# def dashboard():
+#     return render_template("dashboard.html", template_folder='src/template')
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=5000, debug=True)
