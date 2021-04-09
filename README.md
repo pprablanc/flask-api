@@ -22,3 +22,10 @@ pipenv run python wsgi.py
 docker-compose build
 docker-compose up -d
 ```
+
+## Start docker container
+
+
+``` shell
+docker run -p 5000:5000 --name FlaslYieldAPI flask-yield-api_web
+```
