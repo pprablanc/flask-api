@@ -5,9 +5,8 @@ from marshmallow import Schema, fields
 from flask_apispec.views import MethodResource
 from flask_apispec import marshal_with, doc, use_kwargs
 
-from src.functions import load_data
-# load data
-df = load_data()
+from src.settings import df
+
 
 
 class YieldSchema(Schema):
@@ -41,7 +40,7 @@ class YieldAPI(MethodResource, Resource):
         '''
         # res = [{'id': row['id'], 'time': row['time'], 'type': row['cereal'], 'yield_mean': row['yield_mean'], 'yield_map': [[float(row_map) for row_map in col_map] for col_map in row['yield_map'].data]} for index, row in df.iterrows()]
         res = df.iloc[id][['id', 'type', 'time', 'yield_map']]
-        res['yield_map'] = res['yield_map'].data
+        res['yield_map'] = [list(row) for row in res['yield_map'].data]
         return res
 
 class YieldMeanTypeAPI(MethodResource, Resource):

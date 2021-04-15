@@ -7,7 +7,6 @@ d3.json('/types/', selectButton)
 function selectButton(data){
 
   var allTypes = data.types
-  // console.log(allTypes)
   // add the options to the button
   d3.select("#selectButton")
     .selectAll('myOptions')
@@ -20,7 +19,6 @@ function selectButton(data){
 
 // When the button is changed, run the updateChart function
   d3.select("#selectButton").on("change", function(d) {
-    console.log('pouet')
       // recover the option that has been chosen
       var selectedGroup = d3.select(this).property("value")
       // run the updateChart function with this selected option
@@ -45,7 +43,6 @@ function selectButton(data){
             ]
 
 
-            //console.log(data_d3)
             var chart = nv.models.lineChart()
                 .x(function(d) {
                     return d[0]
@@ -78,6 +75,38 @@ function selectButton(data){
   }
 }
 
+
+//Read the data
+
+d3.json('/yield/0', plot_map);
+
+function plot_map(data){
+  // set the dimensions and margins of the graph
+  var margin = {top: 30, right: 30, bottom: 30, left: 30},
+    width = 450 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+  data_d3 = data['yield_map']
+  console.log(data)
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+  svg.selectAll()
+      .data(data, function(d) {return d.group+':'+d.variable;})
+      .enter()
+      .append("rect")
+      .style("fill", function(d) { return myColor(d.value)} )
+
+    d3.select('#yield_map svg')
+      .data(data_d3)
+}
 
 
 

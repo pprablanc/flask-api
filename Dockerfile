@@ -1,17 +1,17 @@
-FROM tiangolo/uwsgi-nginx:python3.8
+FROM python:3.8
 
-RUN pip3.8 install pipenv
+RUN pip3 install pipenv
 
 ENV PROJECT_DIR /usr/src/flaskyieldapi
+ENV FLASK_APP=./launch_app.py
 
 WORKDIR ${PROJECT_DIR}
 
-COPY Pipfile .
-COPY Pipfile.lock .
 COPY . .
 
-RUN pipenv install --deploy --ignore-pipfile
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["pipenv", "run", "python", "wsgi.py"]
+CMD ["./run_app.sh"]

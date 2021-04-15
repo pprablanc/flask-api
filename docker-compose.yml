@@ -5,6 +5,6 @@ services:
       context: ./
       dockerfile: Dockerfile
     volumes:
-      - ./src/:/usr/src/flaskyieldapi/
+      - ./:/usr/src/flaskyieldapi/
     ports:
       - 5000:5000

@@ -5,6 +5,11 @@ import netCDF4 as nc
 import matplotlib.pyplot as plt
 
 
+def init():
+    global df
+    # Load data
+    df = load_data()
+
 def load_data():
     '''Description: load netcdf4 files, store it in a dataframe and preprocess the data.
 
@@ -52,3 +57,6 @@ def load_data():
     df.drop("nc", axis="columns", inplace=True)
     print('Data import completed.')
     return df
+
+
+
